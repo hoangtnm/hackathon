@@ -1,6 +1,7 @@
 import os
 import random
 import shutil
+from datetime import datetime
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,6 +13,10 @@ from torch.utils.data import Dataset
 from torchvision import models
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
+
+
+def get_time():
+    return datetime.now().strftime('%H:%M:%S')
 
 
 # TODO: Adding a “Projector” to TensorBoard
