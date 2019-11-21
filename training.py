@@ -9,7 +9,9 @@ import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
+from config import BATCH_SIZE
 from config import DATASET_PATH
+from config import EPOCHS
 from utils import get_data_loader
 from utils import get_device
 from utils import get_metadata
@@ -116,12 +118,6 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
 
 if __name__ == '__main__':
 
-    HyperParams = {
-        'batch_size': 32,
-        'input_size': 224,
-        'epochs': 20
-    }
-
     checkpoint_path = os.path.join('checkpoint', 'checkpoint.pth')
     checkpoint_dir = os.path.dirname(checkpoint_path)
     if not os.path.exists(checkpoint_dir):
@@ -133,7 +129,7 @@ if __name__ == '__main__':
         shutil.rmtree(log_path)
     writer = SummaryWriter(log_path)
 
-    data_loaders = {x: get_data_loader(os.path.join(DATASET_PATH, x), batch_size=HyperParams['batch_size'], mode=x)
+    data_loaders = {x: get_data_loader(os.path.join(DATASET_PATH, x), batch_size=BATCH_SIZE, mode=x)
                     for x in ['train', 'val']}
 
     # torch.multiprocessing.freeze_support()
@@ -141,5 +137,5 @@ if __name__ == '__main__':
     num_classes = len(class_names)
     model = get_net(classes=num_classes, pretrained=True)
     model = main(model, checkpoint_path, data_loaders,
-                 writer=writer, epochs=HyperParams['epochs'])
+                 writer=writer, epochs=EPOCHS)
     writer.close()
