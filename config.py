@@ -1,5 +1,4 @@
 import os
-from .utils import get_metadata
 
 DATASET_PATH = "Cyclone_Wildfire_Flood_Earthquake_Database"
 
@@ -7,5 +6,5 @@ DATASET_PATH = "Cyclone_Wildfire_Flood_Earthquake_Database"
 CLASSES = ["Cyclone", "Earthquake", "Flood", "Wildfire"]
 
 TRAIN_SPLIT = 0.75
-VAL_SPLIT = 0.1
-TEST_SPLIT = 0.25
+VAL_SPLIT = 0.25
+TEST_SPLIT = 0.1
