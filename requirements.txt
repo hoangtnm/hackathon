@@ -1,0 +1,8 @@
+tqdm
+pydrive
+torch
+torchvision
+gmplot
+pymongo
+eventlet
+python-socketio
