@@ -57,14 +57,13 @@ class EmotionDataset(Dataset):
     # TODO: Custom Emotion Dataset
 
 
-def split_image_folder(in_dir, out_dir, train_ratio=0.8, val_ratio=0.2):
+def split_image_folder(in_dir, out_dir, train_size=0.8):
     """Split dataset into train and val.
 
     Args:
         in_dir: path to raw dataset folder.
         out_dir: path to processed folder.
-        train_ratio:
-        val_ratio:
+        train_size: the proportion of the dataset to include in the train split.
     """
     class_names = os.listdir(in_dir)
 
@@ -77,8 +76,7 @@ def split_image_folder(in_dir, out_dir, train_ratio=0.8, val_ratio=0.2):
         img_list = os.listdir(os.path.join(in_dir, class_name))
         random.shuffle(img_list)
         num_images = len(img_list)
-        num_train = int(num_images * train_ratio)
-        num_val = num_images - num_train
+        num_train = int(num_images * train_size)
 
         train_images = img_list[:num_train]
         val_images = img_list[num_train:]
