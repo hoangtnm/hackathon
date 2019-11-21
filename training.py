@@ -63,13 +63,19 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
                 # zero the parameter gradients
                 optimizer.zero_grad()
 
-                # forward + backward + optimize
-                outputs = net(inputs)
-                _, predictions = torch.max(outputs, 1)
-                loss = criterion(outputs, labels)
-                loss.backward()
-                optimizer.step()
+                # forward
+                # track history if only in train
+                with torch.set_grad_enabled(phase == 'train'):
+                    # forward + backward + optimize
+                    outputs = net(inputs)
+                    _, predictions = torch.max(outputs, 1)
+                    loss = criterion(outputs, labels)
 
+                    # backward + optimize only if in training phase
+                    loss.backward()
+                    optimizer.step()
+
+                # statistics
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(predictions == labels)
 
