@@ -17,14 +17,16 @@ from utils import get_net
 
 
 def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
-    """Training function.
+    """Transfer Learning for Computer Vision.
+
     Args:
         net: model instance.
         checkpoint: path to checkpoint.
-        dataloaders(dict): dict mapping keys to corresponding dataloaders
-        writer(SummaryWriter): tensorboard writer.
+        dataloaders (dict): dict mapping keys to corresponding dataloaders
+        writer (SummaryWriter, optional): tensorboard writer.
         epochs: number of epochs to train the model.
         lr: learning rate.
+
     Returns:
         net: model instance.
     """
@@ -66,14 +68,14 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
                 # forward
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
-                    # forward + backward + optimize
                     outputs = net(inputs)
                     _, predictions = torch.max(outputs, 1)
                     loss = criterion(outputs, labels)
 
                     # backward + optimize only if in training phase
-                    loss.backward()
-                    optimizer.step()
+                    if phase == 'train':
+                        loss.backward()
+                        optimizer.step()
 
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
