@@ -81,10 +81,10 @@ def split_image_folder(in_dir, out_dir, train_size=0.8):
         train_images = img_list[:num_train]
         val_images = img_list[num_train:]
         for image in train_images:
-            shutil.copy2(os.path.join(in_dir, class_name, train_images),
+            shutil.copy2(os.path.join(in_dir, class_name, image),
                          os.path.join(out_dir, 'train', class_name, image))
         for image in val_images:
-            shutil.copy2(os.path.join(in_dir, class_name, val_images),
+            shutil.copy2(os.path.join(in_dir, class_name, image),
                          os.path.join(out_dir, 'val', class_name, image))
 
 
