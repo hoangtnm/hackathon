@@ -28,13 +28,13 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
     Returns:
         net: model instance.
     """
+    since = time.time()
     device = get_device()
     net.to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=lr)
 
-    best_loss = 0.5
     initial_epoch = 0
     if os.path.exists(checkpoint):
         checkpoint = torch.load(checkpoint, map_location=device)
@@ -42,6 +42,7 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         initial_epoch = checkpoint['epoch'] + 1
 
+    best_acc = 0.0
     for epoch in range(initial_epoch, epochs):
 
         for phase in ['train', 'val']:
@@ -83,17 +84,22 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
             print(f'{phase} Epoch: {epoch} - loss: {epoch_loss:.4f} - acc: {epoch_acc:.4f}\n')
 
             # Saving checkpoint
-            if phase == 'val' and epoch_loss < best_loss:
-                best_loss = epoch_loss
+            if phase == 'val' and epoch_acc > best_acc:
+                best_acc = epoch_acc
                 best_net_wts = copy.deepcopy(net.state_dict())
                 torch.save({
                     'epoch': epoch,
+                    'acc': epoch_acc,
                     'loss': epoch_loss,
                     'model_state_dict': best_net_wts,
                     'optimizer_state_dict': optimizer.state_dict(),
                 }, checkpoint)
 
             time.sleep(0.25)
+
+    time_elapsed = time.time() - since
+    print(f'Training complete in {time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s')
+    print(f'Best val Acc: {best_acc:4f}')
 
     # load best net weights
     net.load_state_dict(best_net_wts)
