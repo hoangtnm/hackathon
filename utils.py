@@ -93,15 +93,16 @@ def get_device():
     return torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 
-def get_net(classes):
+def get_net(classes, pretrained=False):
     """Returns a torchvision model.
 
     Args:
-         classes: num of classes
+         classes: num of classes.
+         pretrained (bool): If True, returns a model pre-trained on COCO train2017.
     Returns:
         net: model instance.
     """
-    net = models.resnet18(pretrained=False)
+    net = models.resnet18(pretrained=pretrained)
     net.fc = nn.Linear(net.fc.in_features, classes)
     return net
 

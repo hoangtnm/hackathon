@@ -94,6 +94,7 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
                 }, checkpoint)
 
             time.sleep(0.25)
+
     # load best net weights
     net.load_state_dict(best_net_wts)
     return net
@@ -124,7 +125,7 @@ if __name__ == '__main__':
     # torch.multiprocessing.freeze_support()
     _, class_names, _ = get_metadata(os.path.join(DATASET_PATH, 'train'))
     num_classes = len(class_names)
-    model = get_net(classes=num_classes)
+    model = get_net(classes=num_classes, pretrained=True)
     model = main(model, checkpoint_path, data_loaders,
                  writer=writer, epochs=HyperParams['epochs'])
     writer.close()
