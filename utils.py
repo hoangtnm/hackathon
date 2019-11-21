@@ -1,14 +1,17 @@
-import PIL
-import torch
-import numpy as np
-import torch.nn as nn
+import os
+import random
+import shutil
+
 import matplotlib.pyplot as plt
-from torch.utils.data import Dataset
+import numpy as np
+import torch
+import torch.nn as nn
+from PIL import Image
 from torch.utils.data import DataLoader
-from torchvision.datasets import ImageFolder
-from torch.utils.tensorboard import SummaryWriter
-from torchvision import transforms
+from torch.utils.data import Dataset
 from torchvision import models
+from torchvision import transforms
+from torchvision.datasets import ImageFolder
 
 
 # TODO: Adding a “Projector” to TensorBoard
@@ -52,6 +55,39 @@ def write_to_tensorboard():
 class EmotionDataset(Dataset):
     """Emotion dataset."""
     # TODO: Custom Emotion Dataset
+
+
+def split_image_folder(in_dir, out_dir, train_ratio=0.8, val_ratio=0.2):
+    """Split dataset into train and val.
+
+    Args:
+        in_dir: path to raw dataset folder.
+        out_dir: path to processed folder.
+        train_ratio:
+        val_ratio:
+    """
+    class_names = os.listdir(in_dir)
+
+    if os.path.exists(out_dir):
+        shutil.rmtree(out_dir)
+    else:
+        os.makedirs(out_dir)
+
+    for class_name in class_names:
+        img_list = os.listdir(os.path.join(in_dir, class_name))
+        random.shuffle(img_list)
+        num_images = len(img_list)
+        num_train = int(num_images * train_ratio)
+        num_val = num_images - num_train
+
+        train_images = img_list[:num_train]
+        val_images = img_list[num_train:]
+        for image in train_images:
+            shutil.copy2(os.path.join(in_dir, class_name, train_images),
+                         os.path.join(out_dir, 'train', class_name, image))
+        for image in val_images:
+            shutil.copy2(os.path.join(in_dir, class_name, val_images),
+                         os.path.join(out_dir, 'val', class_name, image))
 
 
 def get_device():
@@ -165,7 +201,7 @@ def get_data_transforms():
             transforms.RandomResizedCrop(224),
             transforms.ColorJitter(hue=.05, saturation=.05),
             transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(30, resample=PIL.Image.BILINEAR),
+            transforms.RandomRotation(30, resample=Image.BILINEAR),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
