@@ -43,8 +43,6 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
         initial_epoch = checkpoint['epoch'] + 1
 
     for epoch in range(initial_epoch, epochs):
-        # print(f'Epoch: {epoch}/{epochs}')
-        # time.sleep(1)
 
         for phase in ['train', 'val']:
             if phase == 'train':
@@ -95,7 +93,7 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
                     'optimizer_state_dict': optimizer.state_dict(),
                 }, checkpoint)
 
-            time.sleep(0.01)
+            time.sleep(0.25)
     # load best net weights
     net.load_state_dict(best_net_wts)
     return net
