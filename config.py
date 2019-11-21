@@ -1,6 +1,6 @@
 import os
 
-DATASET_PATH = "Cyclone_Wildfire_Flood_Earthquake_Database"
+DATASET_PATH = "dataset"
 
 # initialize the class labels in the dataset
 CLASSES = ["Cyclone", "Earthquake", "Flood", "Wildfire"]

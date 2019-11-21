@@ -188,9 +188,9 @@ def get_data_loader(path, batch_size=2, mode='train', num_workers=2):
         data_loader
     """
     data_transform = get_data_transforms()[mode]
-    train_set = ImageFolder(root=path, transform=data_transform)
+    dataset = ImageFolder(root=path, transform=data_transform)
     data_loader = DataLoader(
-        train_set, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+        dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
     return data_loader
 
 
