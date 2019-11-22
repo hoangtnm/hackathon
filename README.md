@@ -37,7 +37,7 @@ Cyclone_Wildfire_Flood_Earthquake_Database
 ├── Flood [1073 entries]
 └── Wildfire [1077 entries]
  
-4 directories, 1 file
+4 directories
 ```
 
 ## Project structure
@@ -45,3 +45,12 @@ Cyclone_Wildfire_Flood_Earthquake_Database
 ```
 
 ```
+
+Our project contains:
+- The natural disaster dataset.
+- An `checkpoint/`  directory where our model and plots will be stored. The results from my experiment are included.
+- A selection of `videos/`  for testing the video classification prediction script.
+- Our training script, `training.py` . This script will perform fine-tuning on a ResNet18 model pre-trained on the ImageNet dataset.
+- Our video classification prediction script, `predict_camera.py` ,
+which performs a rolling average prediction to classify the video in real-time.
+
