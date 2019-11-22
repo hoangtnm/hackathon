@@ -8,6 +8,7 @@
 - [Docker Desktop for Windows](https://hub.docker.com/editions/community/docker-ce-desktop-windows)
 - [PyTorch](https://pytorch.org/)
 - [Django](https://www.djangoproject.com/)
+- [OpenCV](https://anaconda.org/conda-forge/opencv)
 
 ### Docker Installation Guide (Ubuntu)
 
