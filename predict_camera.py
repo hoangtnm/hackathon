@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import torch
 
@@ -13,7 +15,9 @@ if __name__ == '__main__':
     device = get_device()
 
     # Training dataset metadata
-    _, class_names, class_to_idx = get_metadata(DATASET_PATH)
+    _, class_names, class_to_idx = get_metadata(
+        os.path.join(DATASET_PATH, 'train')
+    )
     num_classes = len(class_names)
     idx_to_class = {value: key for key, value in class_to_idx.items()}
 
