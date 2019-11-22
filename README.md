@@ -9,7 +9,7 @@
 - [PyTorch](https://pytorch.org/)
 - [Django](https://www.djangoproject.com/)
 
-### Docker Installation Guide
+### Docker Installation Guide (Ubuntu)
 
 ```bash
 sudo apt remove docker docker-engine docker.io containerd runc
