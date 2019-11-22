@@ -2,9 +2,12 @@
 
 ## Prerequisites
 
-- [Python 3.7+](https://repo.anaconda.com/archive/Anaconda3-2019.10-Linux-x86_64.sh)
+- [Python 3.7+](https://www.anaconda.com/distribution/)
 - [Ubuntu 18.04 LTS](https://ubuntu.com/download/desktop)
 - [Docker Engine - Ubuntu (Community)](https://hub.docker.com/editions/community/docker-ce-server-ubuntu)
+- [Docker Desktop for Windows](https://hub.docker.com/editions/community/docker-ce-desktop-windows)
+- [PyTorch](https://pytorch.org/)
+- [Django](https://www.djangoproject.com/)
 
 ### Docker Installation Guide
 
