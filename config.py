@@ -14,3 +14,11 @@ EPOCHS = 50
 
 # set the path to the serialized model after training
 CHECKPOINT_PATH = os.path.join('checkpoint', 'checkpoint.pth')
+
+
+class GeoLocations:
+    def __init__(self):
+        self.name = 'Da Nang'
+        self.latitude = 16.047079
+        self.longitude = 108.206230
+        self.zoom_level = 13

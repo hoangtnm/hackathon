@@ -1,5 +1,5 @@
 import gmplot
-from parameters import GeoLocations
+from config import GeoLocations
 
 location = GeoLocations()
 
