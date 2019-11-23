@@ -42,7 +42,7 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
     initial_epoch = 0
     if os.path.exists(checkpoint):
         checkpoint = torch.load(checkpoint, map_location=device)
-        model.load_state_dict(checkpoint['model_state_dict'])
+        net.load_state_dict(checkpoint['model_state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         initial_epoch = checkpoint['epoch'] + 1
 
