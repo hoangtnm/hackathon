@@ -3,6 +3,8 @@ from os import getenv
 import eventlet
 import socketio
 
+from utils import get_time
+
 HOST = getenv('SOCKET_HOST', '0.0.0.0')
 PORT = getenv('SOCKET_PORT', 7642)
 NAMESPACE = '/ns'
@@ -18,15 +20,15 @@ def connect(sid, environ):
 
 @sio.on('message', namespace=NAMESPACE)
 def message(sid, data):
-    # print('.' * 70)
+    print('.' * 70)
     # psize = len(data)
     # print('Received data at {}. Packet size in bytes: {} ({})'.format(
     #     get_time(),
     #     psize,
     #     byte_to_text(psize)
     # ))
-    # print(':' * 70)
-    pass
+    print(f'Received data at {get_time()}')
+    print(':' * 70)
 
 
 def start_server():
