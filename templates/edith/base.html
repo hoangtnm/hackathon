@@ -11,23 +11,16 @@
     <title>{% block title %}E.D.I.T.H{% endblock %}</title>
 </head>
 <body>
-<div class="jumbotron text-center">
-    <h1>Bootstrap 4 - Grid Basic</h1>
-    <p>Bootstrap's grid system is built with flexbox and allows up to 12 columns across the page.</p>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-4">
-            <h1>Column 1</h1>
-        </div>
-        <div class="col-sm-4">
-            <h1>Column 2</h1>
-        </div>
-        <div class="col-sm-4">
-            <h1>Column 3</h1>
-        </div>
-    </div>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <img src="{% static "images/favicon_v2.png" %}" width="30" height="30" class="d-inline-block align-top" alt="">
+        E.D.I.T.H
+    </a>
+    <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</nav>
 {% block content %}
 {% endblock %}
 </body>
