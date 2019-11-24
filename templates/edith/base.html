@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+    <title>{% block title %}E.D.I.T.H{% endblock %}</title>
+</head>
+<body>
+    <div class="jumbotron text-center">
+        <h1>Bootstrap 4 - Grid Basic</h1>
+        <p>Bootstrap's grid system is built with flexbox and allows up to 12 columns across the page.</p>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <h1>Column 1</h1>
+            </div>
+            <div class="col-sm-4">
+                <h1>Column 2</h1>
+            </div>
+            <div class="col-sm-4">
+                <h1>Column 3</h1>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
