@@ -107,8 +107,9 @@ def get_net(classes, pretrained=False):
     Returns:
         net: model instance.
     """
-    net = models.resnet18(pretrained=pretrained)
-    net.fc = nn.Linear(net.fc.in_features, classes)
+    net = models.mobilenet_v2(pretrained=pretrained)
+    in_features = net.classifier[1].in_features
+    net.classifier[1] = nn.Linear(in_features, classes)
     return net
 
 
