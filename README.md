@@ -1,4 +1,4 @@
-# E.D.I.T.H Project
+# E.D.I.T.H Project by The Unsittables
 
 ## Prerequisites
 
@@ -58,3 +58,8 @@ Our project contains:
 - Our video classification prediction script, `predict_camera.py` ,
 which performs a rolling average prediction to classify the video in real-time.
 
+## Run E.D.I.T.H
+
+```python
+python manage.py runserver
+```

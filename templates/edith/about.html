@@ -1,0 +1,33 @@
+{% extends "edith/base.html" %}
+
+{% load static %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome to the Future of Smart City</h1>
+        <p class="lead">Have you ever wished you could protect citizens without having to worry about when it will
+            happen or how many people you can protect?</p>
+        <hr class="my-4">
+        <p class="lead">We're using the latest developments in machine learning to offload the repetitive parts of
+            real-time monitoring.</p>
+    </div>
+    <div class="jumbotron">
+        <h3>We want to automate away the tedious parts of supervision, so you can focus on what you need to do most:
+            smart decisions.
+        </h3>
+        <hr class="my-4">
+        <p>Everyone knows that programming is central to the future as every industry becomes transformed by software.
+            We imagine a world where machine learning allows cameras to become assistants — E.D.I.T.H is
+            the first step to achieving that vision.
+        </p>
+    </div>
+    <img src="{% static "images/kite_team.jpg" %}" class="img-fluid" alt="E.D.I.T.H Team">
+    <blockquote class="blockquote text-center">
+        <p class="mb-0">E.D.I.T.H’s engineering team of University of Greenwich (Viet Nam) possesses the technical chops
+            to pull off
+            artificial intelligence in the cloud for the most critical of audiences: developers.</p>
+        <footer class="blockquote-footer">The Unsittables</footer>
+    </blockquote>
+{% endblock %}
