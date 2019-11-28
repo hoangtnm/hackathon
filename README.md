@@ -1,4 +1,4 @@
-# FPT Edu Hackathon 2019
+# E.D.I.T.H Project
 
 ## Prerequisites
 
