@@ -18,11 +18,12 @@ from utils import get_metadata
 from utils import get_net
 
 
-def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
+def main(net, device, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
     """Transfer Learning for Computer Vision.
 
     Args:
         net: model instance.
+        device (torch.device): where data will be put on.
         checkpoint: path to checkpoint.
         dataloaders (dict): dict mapping keys to corresponding dataloaders
         writer (SummaryWriter, optional): tensorboard writer.
@@ -33,8 +34,6 @@ def main(net, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
         net: model instance.
     """
     since = time.time()
-    device = get_device()
-    net.to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(net.parameters(), lr=lr)
@@ -133,9 +132,9 @@ if __name__ == '__main__':
                     for x in ['train', 'val']}
 
     # torch.multiprocessing.freeze_support()
-    _, class_names, _ = get_metadata(os.path.join(DATASET_PATH, 'train'))
-    num_classes = len(class_names)
-    model = get_net(classes=num_classes, pretrained=True)
-    model = main(model, checkpoint_path, data_loaders,
-                 writer=writer, epochs=EPOCHS)
+    device = get_device()
+    _, num_classes, _ = get_metadata(os.path.join(DATASET_PATH, 'train'))
+    model = get_net(model_name='mobilenet_v2', mode='train', device=device,
+                    pretrained=True, num_classes=num_classes)
+    model = main(model, device, checkpoint_path, data_loaders, writer=writer, epochs=EPOCHS)
     writer.close()

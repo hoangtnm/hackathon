@@ -3,6 +3,7 @@ import random
 import shutil
 from datetime import datetime
 
+import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -98,19 +99,62 @@ def get_device():
     return torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 
-def get_net(classes, pretrained=False):
+def get_net(model_name, mode, device, pretrained=False, num_classes=2, checkpoint_path=None):
     """Returns a torchvision model.
 
     Args:
-         classes: num of classes.
-         pretrained (bool): If True, returns a model pre-trained on COCO train2017.
+        model_name (str): name of model.
+        mode (str): train or eval.
+        device (torch.device): where data and model will be put on.
+        pretrained (bool): If True, returns a model pre-trained on COCO train2017.
+        num_classes (int): how many classes will be classified.
+        checkpoint_path (str): path to checkpoint.
+
     Returns:
         net: model instance.
     """
-    net = models.mobilenet_v2(pretrained=pretrained)
-    in_features = net.classifier[1].in_features
-    net.classifier[1] = nn.Linear(in_features, classes)
-    return net
+    if model_name == "mobilenet" or model_name == "mobilenet_v2":
+        net = models.mobilenet_v2(pretrained)
+        in_features = net.classifier[1].in_features
+        net.classifier[1] = nn.Linear(in_features, num_classes)
+    elif model_name == "resnet":
+        net = models.resnet18(pretrained)
+        in_features = net.fc.in_features
+        net.fc = nn.Linear(in_features, num_classes)
+
+    if checkpoint_path is not None:
+        checkpoint_dict = torch.load(checkpoint_path, map_location=device)
+        net.load_state_dict(checkpoint_dict['model_state_dict'])
+
+    if mode == 'train':
+        net.train()  # Set model to training mode
+    elif mode == 'eval':
+        net.eval()  # Set model to evaluate mode
+
+    return net.to(device)
+
+
+def get_result(frame, idx_to_class, net, device):
+    """Returns class name of a frame captured by cv2.
+
+    Args:
+         frame: raw frame captured by cv2.
+         idx_to_class (dict):
+         net: torchvision model instance.
+         device (torch.device): device that net is put on.
+    Returns:
+        result (str): class name of the frame.
+    """
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+    # Prediction
+    frame_tensor = preprocess_image(frame_rgb, mode='inference')
+    frame_tensor = frame_tensor.to(device)
+    with torch.no_grad():
+        prediction = net(frame_tensor)
+        result = get_prediction_class(prediction, idx_to_class)
+
+    return result
 
 
 def load_checkpoint(model, path, optimizer=None):
@@ -212,8 +256,8 @@ def get_metadata(path):
 
     Returns:
         dataset_sizes: number of total images.
-        class_names: A list of classes.
-        class_to_idx: A dict mapping class_names to the corresponding labels.
+        num_classes:
+        idx_to_class: A dict mapping labels to the corresponding class_names.
         {'drooling-face': 0,
          'face-savouring-delicious-food': 1,
          'face-with-cowboy-hat': 2,
@@ -221,9 +265,13 @@ def get_metadata(path):
     """
     dataset = ImageFolder(path)
     dataset_size = len(dataset)
+
     class_names = dataset.classes
+    num_classes = len(class_names)
+
     class_to_idx = dataset.class_to_idx
-    return dataset_size, class_names, class_to_idx
+    idx_to_class = {value: key for key, value in class_to_idx.items()}
+    return dataset_size, num_classes, idx_to_class
 
 
 def get_data_loader(path, batch_size=2, mode='train', num_workers=2):
