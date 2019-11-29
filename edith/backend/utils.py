@@ -104,7 +104,7 @@ def get_net(model_name, mode, device, pretrained=False, num_classes=2, checkpoin
 
     Args:
         model_name (str): name of model.
-        mode (str): train or eval.
+        mode (str): train or val.
         device (torch.device): where data and model will be put on.
         pretrained (bool): If True, returns a model pre-trained on COCO train2017.
         num_classes (int): how many classes will be classified.
@@ -128,7 +128,7 @@ def get_net(model_name, mode, device, pretrained=False, num_classes=2, checkpoin
 
     if mode == 'train':
         net.train()  # Set model to training mode
-    elif mode == 'eval':
+    elif mode == 'val':
         net.eval()  # Set model to evaluate mode
 
     return net.to(device)
