@@ -14,8 +14,8 @@ from config import DATASET_PATH
 from config import EPOCHS
 from utils import get_data_loader
 from utils import get_device
-from utils import get_metadata
 from utils import get_net
+from config import CLASSES
 
 
 def main(net, device, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
@@ -131,9 +131,8 @@ if __name__ == '__main__':
     data_loaders = {x: get_data_loader(os.path.join(DATASET_PATH, x), batch_size=BATCH_SIZE, mode=x)
                     for x in ['train', 'val']}
 
-    # torch.multiprocessing.freeze_support()
     device = get_device()
-    _, num_classes, _ = get_metadata(os.path.join(DATASET_PATH, 'train'))
+    num_classes = len(CLASSES)
     model = get_net(model_name='mobilenet_v2', mode='train', device=device,
                     pretrained=True, num_classes=num_classes)
     model = main(model, device, checkpoint_path, data_loaders, writer=writer, epochs=EPOCHS)

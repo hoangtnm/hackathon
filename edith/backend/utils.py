@@ -10,7 +10,6 @@ import torch
 import torch.nn as nn
 from PIL import Image
 from torch.utils.data import DataLoader
-from torch.utils.data import Dataset
 from torchvision import models
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
@@ -18,49 +17,6 @@ from torchvision.datasets import ImageFolder
 
 def get_time():
     return datetime.now().strftime('%H:%M:%S')
-
-
-# TODO: Adding a “Projector” to TensorBoard
-def select_n_random(data, labels, n=100):
-    """Selects n random data points and their corresponding labels from a dataset."""
-    assert len(data) == len(labels)
-
-    perm = torch.randperm(len(data))
-    return data[perm][:n], labels[perm][:n]
-
-
-def write_embedding_to_tensorboard(data, targets, feature_size, class_names, writer, global_step=None):
-    """Writes embedding to TensorBoard.
-    Args:
-        data: data points.
-        targets: corresponding labels.
-        feature_size: a matrix which each row is the feature vector of the data point.
-        class_names (list): list of classes.
-        writer: TensorBoard writer.
-        global_step (int): global step value to record.
-    """
-    # select random images and their target indices
-    images, labels = select_n_random(data, targets)
-
-    # get the class labels for each image
-    class_labels = [class_names[label] for label in labels]
-
-    # log embeddings
-    features = images.view(-1, 3 * (feature_size ** 2))
-    writer.add_embedding(features,
-                         metadata=class_labels,
-                         label_img=images,
-                         global_step=global_step)
-
-
-# TODO: Writing loss to TensorBoard
-def write_to_tensorboard():
-    pass
-
-
-class EmotionDataset(Dataset):
-    """Emotion dataset."""
-    # TODO: Custom Emotion Dataset
 
 
 def split_image_folder(in_dir, out_dir, train_size=0.8):
@@ -72,6 +28,8 @@ def split_image_folder(in_dir, out_dir, train_size=0.8):
         train_size: the proportion of the dataset to include in the train split.
     """
     class_names = os.listdir(in_dir)
+    images_per_class = min([len(os.listdir(os.path.join(in_dir, class_name)))
+                            for class_name in class_names])
 
     if os.path.exists(out_dir):
         shutil.rmtree(out_dir)
@@ -80,7 +38,7 @@ def split_image_folder(in_dir, out_dir, train_size=0.8):
         os.makedirs(os.path.join(out_dir, 'train', class_name))
         os.makedirs(os.path.join(out_dir, 'val', class_name))
 
-        img_list = os.listdir(os.path.join(in_dir, class_name))
+        img_list = os.listdir(os.path.join(in_dir, class_name))[:images_per_class]
         random.shuffle(img_list)
         num_images = len(img_list)
         num_train = int(num_images * train_size)
@@ -134,35 +92,39 @@ def get_net(model_name, mode, device, pretrained=False, num_classes=2, checkpoin
     return net.to(device)
 
 
-def get_result(frame, idx_to_class, net, device):
+def get_result(frame, classes, net, device):
     """Returns class name of a frame captured by cv2.
 
     Args:
-         frame: raw frame captured by cv2.
-         idx_to_class (dict):
+         frame: frame captured by cv2.
+         classes (tuple): ('Cyclone', 'Wildfire', 'Flood', 'Earthquake').
          net: torchvision model instance.
          device (torch.device): device that net is put on.
     Returns:
         result (str): class name of the frame.
     """
+    # Pre-processing
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-    # Prediction
     frame_tensor = preprocess_image(frame_rgb, mode='inference')
     frame_tensor = frame_tensor.to(device)
+
     with torch.no_grad():
         prediction = net(frame_tensor)
-        result = get_prediction_class(prediction, idx_to_class)
+        # result = get_prediction_class(prediction, idx_to_class)
+        _, result_idx = torch.max(prediction, 1)
+        result = classes[result_idx]
 
     return result
 
 
 def load_checkpoint(model, path, optimizer=None):
-    """Load checkpoint from path.
+    """Loads checkpoint from path.
+
     Args:
         model: model instance.
         path: path to the checkpoint.
         optimizer: optimizer instance (only needed during training).
+
     Returns:
         model: model instance loading checkpoint.
         optimizer: optimizer instance loading checkpoint.
@@ -180,9 +142,11 @@ def load_checkpoint(model, path, optimizer=None):
 
 def preprocess_image(image_np, mode='train'):
     """Returns prediction from image.
+
     Args:
         image_np: numpy image.
         mode: train or val.
+
     Returns:
         input_tensor: processed image.
     """
@@ -235,18 +199,18 @@ def visualize_model(model, dataloaders, num_images=6):
         model.train(mode=was_training)
 
 
-def get_prediction_class(prediction, idx_to_class):
-    """Returns class of prediction.
-    Args:
-        prediction(Tensor): a vector of probabilities.
-        idx_to_class(dict): a dict maps keys to the corresponding names. For example:
-        {0: 'cat', 1:'dog'}
-    Returns:
-        target_name: class of the prediction.
-    """
-    target_idx = torch.argmax(prediction).item()
-    target_name = idx_to_class[target_idx]
-    return target_name
+# def get_prediction_class(prediction, idx_to_class):
+#     """Returns class of prediction.
+#     Args:
+#         prediction(Tensor): a vector of probabilities.
+#         idx_to_class(dict): a dict maps keys to the corresponding names. For example:
+#         {0: 'cat', 1:'dog'}
+#     Returns:
+#         target_name: class of the prediction.
+#     """
+#     target_idx = torch.argmax(prediction).item()
+#     target_name = idx_to_class[target_idx]
+#     return target_name
 
 
 def get_metadata(path):
@@ -276,6 +240,7 @@ def get_metadata(path):
 
 def get_data_loader(path, batch_size=2, mode='train', num_workers=2):
     """Returns data_loader.
+
     Args:
         path: path to dataset folder.
         batch_size: number of samples per gradient update.
