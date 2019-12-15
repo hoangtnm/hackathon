@@ -36,7 +36,8 @@ def main(net, device, checkpoint, dataloaders, writer=None, epochs=10, lr=1e-3):
     since = time.time()
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(net.parameters(), lr=lr)
+    # optimizer = optim.Adam(net.parameters(), lr=lr)
+    optimizer = optim.SGD(net.parameters(), lr=lr, momentum=0.9)
 
     initial_epoch = 0
     if os.path.exists(checkpoint):
