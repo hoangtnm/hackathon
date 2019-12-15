@@ -2,10 +2,9 @@ import os
 
 from torchvision.datasets import ImageFolder
 
-DATASET_PATH = "dataset"
-# CLASSES = ("Cyclone", "Earthquake", "Flood", "Wildfire")
+DATASET_PATH = 'dataset'
 dataset = ImageFolder(os.path.join(DATASET_PATH, 'train'))
-# dataset = ImageFolder('Cyclone_Wildfire_Flood_Earthquake_Database')
+# CLASSES = ("Cyclone", "Earthquake", "Flood", "Wildfire", "Neutral")
 CLASSES = tuple(dataset.classes)
 
 TRAIN_SPLIT = 0.75
