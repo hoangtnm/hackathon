@@ -261,9 +261,8 @@ def get_data_transforms():
     data_transforms = {
         'train': transforms.Compose([
             transforms.RandomResizedCrop(224),
-            transforms.ColorJitter(hue=.05, saturation=.05),
             transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(30, resample=Image.BILINEAR),
+            transforms.RandomRotation(30, resample=Image.NEAREST),
             transforms.ToTensor(),
             transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                  std=[0.229, 0.224, 0.225])
